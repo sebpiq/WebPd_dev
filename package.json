@@ -4,13 +4,22 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "test-watch": "TS_NODE_FILES=true mocha --require ts-node/register --extensions ts,tsx --watch --watch-files",
-    "test-bail": "TS_NODE_FILES=true mocha -b --require ts-node/register --extensions ts,tsx",
+    "test-watch": "./scripts/test-watch.sh",
+    "test-bail": "./scripts/test-bail.sh",
+    "test-debug": "./scripts/test-debug.sh",
     "prettier": "prettier --write --config .prettierrc.json",
     "eslint": "npx eslint -c .eslintrc.json --ext .js,.jsx,.ts,.tsx"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebpiq/WebPd_pd-shared.git"
+  },
   "author": "Sébastien Piquemal",
-  "license": "ISC",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/sebpiq/WebPd_pd-shared/issues"
+  },
+  "homepage": "https://github.com/sebpiq/WebPd_pd-shared#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.24.0",
     "@typescript-eslint/parser": "^2.24.0",

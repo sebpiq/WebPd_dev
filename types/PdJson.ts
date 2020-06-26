@@ -29,6 +29,8 @@ declare module PdJson {
         id: ObjectGlobalId;
         nodes: { [localId: string]: Node };
         connections: Array<Connection>;
+        inlets: Array<ObjectLocalId>;
+        outlets: Array<ObjectLocalId>;
         layout?: PatchLayout;
     }
 
@@ -36,6 +38,8 @@ declare module PdJson {
     interface GenericNode extends PdObject {
         id: ObjectLocalId;
         proto: NodeType;
+        // In case the node is only the "outer shell" for a subpatch or an array,
+        // this `refId` allows to recover said subpatch or array in the global Pd object.
         refId?: ObjectGlobalId;
     }
 
@@ -43,9 +47,9 @@ declare module PdJson {
     type Node = ControlNode | GenericNode;
 
     type PortletId = number;
-    type PortletAddress = {
-        id: ObjectLocalId;
-        port: PortletId;
+    interface PortletAddress {
+        id: ObjectLocalId
+        portlet: PortletId
     }
 
     interface Connection {
