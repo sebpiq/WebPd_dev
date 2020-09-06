@@ -34,7 +34,6 @@ declare module PdJson {
         layout?: PatchLayout;
     }
 
-    type NodeType = string;
     interface GenericNode extends PdObject {
         id: ObjectLocalId;
         proto: NodeType;
@@ -60,6 +59,26 @@ declare module PdJson {
     interface Pd {
         patches: { [globalId: string]: Patch };
         arrays: { [globalId: string]: PdArray }
+    }
+
+
+    // ------------------- Node types registry ------------------- // 
+
+    type NodeType = string;
+    enum PortletType {
+        SIGNAL = 'signal',
+        CONTROL = 'control',
+    }
+
+    type PortletTypeGetter = (portlet: PortletId) => PortletType
+
+    interface NodeTemplate {
+        getInletType: PortletTypeGetter,
+        getOutletType: PortletTypeGetter,
+    }
+
+    interface Registry {
+        [nodeType: string]: NodeTemplate
     }
 
     // ------------------- Specific types for controls ------------------- //
@@ -198,4 +217,3 @@ declare module PdJson {
     }
 
 }
-
