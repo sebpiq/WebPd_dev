@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es6",
+        "target": "es2017",
         "esModuleInterop": true,
         "outDir": "./dist",
         "removeComments": true,
@@ -9,10 +9,10 @@
         "preserveConstEnums": true,
         "sourceMap": true
     },
+    "typeRoots": ["./node_modules/@types"],
     "include": [
         "@types/**/*.d.ts",
-        "./types/Pd.ts",
-        "./types/PdJson.ts",
-        "./types/PdDspGraph.ts"
+        "types/*.ts",
+        "*.ts"
     ]
 }

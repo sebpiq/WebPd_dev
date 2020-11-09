@@ -36,7 +36,7 @@ declare module PdJson {
 
     interface GenericNode extends PdObject {
         id: ObjectLocalId;
-        proto: NodeType;
+        type: NodeType;
         // In case the node is only the "outer shell" for a subpatch or an array,
         // this `refId` allows to recover said subpatch or array in the global Pd object.
         refId?: ObjectGlobalId;
@@ -75,6 +75,7 @@ declare module PdJson {
     interface NodeTemplate {
         getInletType: PortletTypeGetter,
         getOutletType: PortletTypeGetter,
+        isSink: () => boolean,
     }
 
     interface Registry {
@@ -89,7 +90,7 @@ declare module PdJson {
     }
 
     interface AtomNode extends GenericNode {
-        proto: 'floatatom' | 'symbolatom';
+        type: 'floatatom' | 'symbolatom';
         layout?: AtomLayout;
     }
 
@@ -108,7 +109,7 @@ declare module PdJson {
     }
 
     interface BangNode extends GenericNode {
-        proto: 'bng';
+        type: 'bng';
         layout?: BangLayout;
     }
 
@@ -125,7 +126,7 @@ declare module PdJson {
     }
 
     interface ToggleNode extends GenericNode {
-        proto: 'tgl';
+        type: 'tgl';
         layout?: ToggleLayout;
     }
 
@@ -144,7 +145,7 @@ declare module PdJson {
     }
 
     interface NumberBoxNode extends GenericNode {
-        proto: 'nbx';
+        type: 'nbx';
         layout?: NumberBoxLayout;
     }
 
@@ -162,7 +163,7 @@ declare module PdJson {
     }
 
     interface SliderNode extends GenericNode {
-        proto: 'vsl' | 'hsl';
+        type: 'vsl' | 'hsl';
         layout?: SliderLayout;
     }
 
@@ -179,7 +180,7 @@ declare module PdJson {
     }
 
     interface RadioNode extends GenericNode {
-        proto: "vradio" | "hradio";
+        type: "vradio" | "hradio";
         layout?: RadioLayout;
     }
 
@@ -195,7 +196,7 @@ declare module PdJson {
     }
 
     interface VuNode extends GenericNode {
-        proto: "vu";
+        type: "vu";
         layout?: VuLayout;
     }
 
@@ -212,7 +213,7 @@ declare module PdJson {
     }
 
     interface CnvNode extends GenericNode {
-        proto: "cnv";
+        type: "cnv";
         layout?: CnvLayout;
     }
 

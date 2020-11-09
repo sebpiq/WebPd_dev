@@ -13,7 +13,7 @@ declare module PdDspGraph {
 
     interface Node {
         readonly id: NodeId;
-        readonly proto: NodeType;
+        readonly type: NodeType;
         readonly sources: {[portletId: number]: PortletAddress | undefined};
         readonly sinks: PortletAddressMap;
     }
