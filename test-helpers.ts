@@ -9,7 +9,10 @@
  *
  */
 
-export type ConciseGraphConnection = [ConcisePortletAddress, ConcisePortletAddress]
+export type ConciseGraphConnection = [
+    ConcisePortletAddress,
+    ConcisePortletAddress
+]
 
 type ConcisePdConnection = [
     PdDspGraph.NodeId,
@@ -25,16 +28,18 @@ type ConcisePatch = Partial<Omit<PdJson.Patch, 'connections'>> & {
 type ConcisePd = { patches: { [patchId: string]: ConcisePatch } }
 type ConciseGraph = {
     [pdNodeId: string]: {
-        sinks?: { [outletId: number]: Array<ConcisePortletAddress> },
+        sinks?: { [outletId: number]: Array<ConcisePortletAddress> }
         type?: PdDspGraph.NodeType
     }
 }
 
-type ConciseRegistry = {[nodeType: string]: {
-    inletType?: PdJson.PortletType,
-    outletType?: PdJson.PortletType,
-    isSink?: boolean
-}}
+type ConciseRegistry = {
+    [nodeType: string]: {
+        inletType?: PdJson.PortletType
+        outletType?: PdJson.PortletType
+        isSink?: boolean
+    }
+}
 
 export const pdJsonDefaults = (): PdJson.Pd => ({
     patches: {},
@@ -134,14 +139,16 @@ export const makeGraph = (conciseGraph: ConciseGraph): PdDspGraph.Graph => {
     return graph
 }
 
-export const makeRegistry = (conciseRegistry: ConciseRegistry): PdJson.Registry => {
+export const makeRegistry = (
+    conciseRegistry: ConciseRegistry
+): PdJson.Registry => {
     const registry: PdJson.Registry = {}
     Object.entries(conciseRegistry).forEach(([nodeType, entryParams]) => {
         registry[nodeType] = {
             getInletType: (): PdJson.PortletType =>
-                entryParams.inletType || 'signal' as PdJson.PortletType,
+                entryParams.inletType || ('signal' as PdJson.PortletType),
             getOutletType: (): PdJson.PortletType =>
-                entryParams.outletType || 'signal' as PdJson.PortletType,
+                entryParams.outletType || ('signal' as PdJson.PortletType),
             isSink: () => entryParams.isSink || false,
         }
     })

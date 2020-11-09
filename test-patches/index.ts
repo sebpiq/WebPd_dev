@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 const TEST_PATCHES_DIR = path.resolve(__dirname)
-  
+
 export default {
     subpatches: fs
         .readFileSync(path.join(TEST_PATCHES_DIR, 'subpatches.pd'))
@@ -28,4 +28,3 @@ export default {
         .readFileSync(path.join(TEST_PATCHES_DIR, 'portlets-order2.pd'))
         .toString(),
 }
-  

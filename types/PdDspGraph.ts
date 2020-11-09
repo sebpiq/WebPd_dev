@@ -1,23 +1,23 @@
 declare module PdDspGraph {
-
     type NodeId = string
-    type NodeType = string;
+    type NodeType = string
 
-    type PortletId = number;
+    type PortletId = number
     interface PortletAddress {
-        readonly id: NodeId;
-        readonly portlet: PortletId;
-    } 
-    
-    type PortletAddressMap = {[portletId: number]: Array<PortletAddress> | undefined}
-
-    interface Node {
-        readonly id: NodeId;
-        readonly type: NodeType;
-        readonly sources: {[portletId: number]: PortletAddress | undefined};
-        readonly sinks: PortletAddressMap;
+        readonly id: NodeId
+        readonly portlet: PortletId
     }
 
-    type Graph = { [localId: string]: Node };
-    
+    type PortletAddressMap = {
+        [portletId: number]: Array<PortletAddress> | undefined
+    }
+
+    interface Node {
+        readonly id: NodeId
+        readonly type: NodeType
+        readonly sources: { [portletId: number]: PortletAddress | undefined }
+        readonly sinks: PortletAddressMap
+    }
+
+    type Graph = { [localId: string]: Node }
 }

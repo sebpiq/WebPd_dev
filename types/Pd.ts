@@ -1,3 +1,3 @@
 declare module Pd {
-    export type PdString = string;
+    export type PdString = string
 }
