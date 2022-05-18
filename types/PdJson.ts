@@ -1,7 +1,26 @@
 declare module PdJson {
+    // In Pd some objects use a global namespace shared across all patches.
+    // This is the case for example of arrays.
     type ObjectGlobalId = string
+    
+    // Other objects use a local namespace. In this case, it is therefore possible
+    // for 2 different objects in distinct patches to have the same name without 
+    // interfering. This is the case for example of subpatches. 
     type ObjectLocalId = string
-    type ObjectArgument = string | number
+
+    type ObjectArgs = Array<PdSharedTypes.NodeArgument>
+
+    type PortletId = number
+
+    interface ConnectionEndpoint {
+        nodeId: ObjectLocalId
+        portletId: PortletId
+    }
+
+    interface Connection {
+        source: ConnectionEndpoint
+        sink: ConnectionEndpoint
+    }
 
     interface ObjectLayout {
         x?: number
@@ -11,7 +30,7 @@ declare module PdJson {
     }
 
     interface PdObject {
-        args: Array<ObjectArgument>
+        args: ObjectArgs
         layout?: ObjectLayout
     }
 
@@ -35,7 +54,7 @@ declare module PdJson {
 
     interface GenericNode extends PdObject {
         id: ObjectLocalId
-        type: NodeType
+        type: PdSharedTypes.NodeType
         // In case the node is only the "outer shell" for a subpatch or an array,
         // this `refId` allows to recover said subpatch or array in the global Pd object.
         refId?: ObjectGlobalId
@@ -52,40 +71,9 @@ declare module PdJson {
         | CnvNode
     type Node = ControlNode | GenericNode
 
-    type PortletId = number
-    interface PortletAddress {
-        id: ObjectLocalId
-        portlet: PortletId
-    }
-
-    interface Connection {
-        source: PortletAddress
-        sink: PortletAddress
-    }
-
     interface Pd {
         patches: { [globalId: string]: Patch }
         arrays: { [globalId: string]: PdArray }
-    }
-
-    // ------------------- Node types registry ------------------- //
-
-    type NodeType = string
-    enum PortletType {
-        SIGNAL = 'signal',
-        CONTROL = 'control',
-    }
-
-    type PortletTypeGetter = (portlet: PortletId) => PortletType
-
-    interface NodeTemplate {
-        getInletType: PortletTypeGetter
-        getOutletType: PortletTypeGetter
-        isSink: () => boolean
-    }
-
-    interface Registry {
-        [nodeType: string]: NodeTemplate
     }
 
     // ------------------- Specific types for controls ------------------- //

@@ -10,34 +10,41 @@
  */
 
 export type ConciseGraphConnection = [
-    ConcisePortletAddress,
-    ConcisePortletAddress
+    ConciseConnectionEndpoint,
+    ConciseConnectionEndpoint
 ]
 
 type ConcisePdConnection = [
     PdDspGraph.NodeId,
-    PdDspGraph.PortletId,
+    PdJson.PortletId,
     PdDspGraph.NodeId,
-    PdDspGraph.PortletId
+    PdJson.PortletId
 ]
-type ConcisePortletAddress = [PdDspGraph.NodeId, PdDspGraph.PortletId]
+type ConciseConnectionEndpoint = [PdDspGraph.NodeId, PdDspGraph.PortletId]
 type ConcisePatch = Partial<Omit<PdJson.Patch, 'connections'>> & {
     nodes: { [localId: string]: PdJson.Node }
     connections: Array<ConcisePdConnection>
 }
 type ConcisePd = { patches: { [patchId: string]: ConcisePatch } }
+type ConciseNode = {
+    sinks?: { [outletId: number]: Array<ConciseConnectionEndpoint> }
+    type?: PdSharedTypes.NodeType
+    args?: PdDspGraph.NodeArguments
+    inlets?: PdDspGraph.PortletMap
+    outlets?: PdDspGraph.PortletMap
+    isEndSink?: true
+}
 type ConciseGraph = {
-    [pdNodeId: string]: {
-        sinks?: { [outletId: number]: Array<ConcisePortletAddress> }
-        type?: PdDspGraph.NodeType
-    }
+    [pdNodeId: string]: ConciseNode
 }
 
 type ConciseRegistry = {
     [nodeType: string]: {
-        inletType?: PdJson.PortletType
-        outletType?: PdJson.PortletType
-        isSink?: boolean
+        inletTypes?: Array<PdSharedTypes.PortletType>
+        outletTypes?: Array<PdSharedTypes.PortletType>
+        isEndSink?: boolean
+        inflateArgs?: PdRegistry.NodeTemplate["inflateArgs"]
+        rerouteConnectionIn?: PdRegistry.NodeTemplate["rerouteConnectionIn"]
     }
 }
 
@@ -69,28 +76,31 @@ export const nodeDefaults = (
 ): PdDspGraph.Node => ({
     id,
     type,
+    args: {},
     sources: {},
     sinks: {},
+    inlets: {},
+    outlets: {}
 })
 
 export const makeConnection = (
     conciseConnection: ConcisePdConnection
 ): PdJson.Connection => ({
     source: {
-        id: conciseConnection[0],
-        portlet: conciseConnection[1],
+        nodeId: conciseConnection[0],
+        portletId: conciseConnection[1],
     },
     sink: {
-        id: conciseConnection[2],
-        portlet: conciseConnection[3],
+        nodeId: conciseConnection[2],
+        portletId: conciseConnection[3],
     },
 })
 
-export const makePortletAddress = (
-    conciseAddress: ConcisePortletAddress
-): PdDspGraph.PortletAddress => ({
-    id: conciseAddress[0],
-    portlet: conciseAddress[1],
+export const makeConnectionEndpoint = (
+    conciseEndpoint: ConciseConnectionEndpoint
+): PdDspGraph.ConnectionEndpoint => ({
+    nodeId: conciseEndpoint[0],
+    portletId: conciseEndpoint[1],
 })
 
 export const makePd = (concisePd: ConcisePd): PdJson.Pd => {
@@ -120,17 +130,17 @@ export const makeGraph = (conciseGraph: ConciseGraph): PdDspGraph.Graph => {
 
     Object.entries(conciseGraph).forEach(([sourceId, partialNode]) => {
         Object.entries(partialNode.sinks || {}).forEach(
-            ([outletStr, sinkAddresses]) => {
-                const outlet = parseFloat(outletStr)
-                graph[sourceId].sinks[outlet] = []
-                sinkAddresses.forEach(([sinkId, inlet]) => {
-                    graph[sourceId].sinks[outlet].push(
-                        makePortletAddress([sinkId, inlet])
+            ([outletId, sinks]) => {
+                graph[sourceId].sinks[outletId] = []
+                sinks.forEach(([sinkId, inlet]) => {
+                    graph[sinkId].sources[inlet] = graph[sinkId].sources[inlet] || []
+                    graph[sourceId].sinks[outletId].push(
+                        makeConnectionEndpoint([sinkId, inlet])
                     )
-                    graph[sinkId].sources[inlet] = makePortletAddress([
+                    graph[sinkId].sources[inlet].push(makeConnectionEndpoint([
                         sourceId,
-                        outlet,
-                    ])
+                        outletId,
+                    ]))
                 })
             }
         )
@@ -141,15 +151,33 @@ export const makeGraph = (conciseGraph: ConciseGraph): PdDspGraph.Graph => {
 
 export const makeRegistry = (
     conciseRegistry: ConciseRegistry
-): PdJson.Registry => {
-    const registry: PdJson.Registry = {}
+): PdRegistry.Registry => {
+    const registry: PdRegistry.Registry = {}
     Object.entries(conciseRegistry).forEach(([nodeType, entryParams]) => {
+        const defaultPortletsTemplate: Array<PdSharedTypes.PortletType> = ['control']
+
+        const inletsTemplate: PdDspGraph.PortletMap = {}
+        ;(entryParams.inletTypes || defaultPortletsTemplate).map((inletType, i) => {
+            inletsTemplate[`${i}`] = {type: inletType}
+        })
+
+        const outletsTemplate: PdDspGraph.PortletMap = {}
+        ;(entryParams.outletTypes || defaultPortletsTemplate).map((outletType, i) => {
+            outletsTemplate[`${i}`] = {type: outletType}
+        })
+
         registry[nodeType] = {
-            getInletType: (): PdJson.PortletType =>
-                entryParams.inletType || ('signal' as PdJson.PortletType),
-            getOutletType: (): PdJson.PortletType =>
-                entryParams.outletType || ('signal' as PdJson.PortletType),
-            isSink: () => entryParams.isSink || false,
+            buildInlets: (): PdDspGraph.PortletMap =>
+                inletsTemplate,
+
+            buildOutlets: (): PdDspGraph.PortletMap =>
+                outletsTemplate,
+
+            getIsEndSink: () => entryParams.isEndSink || false,
+
+            inflateArgs: entryParams.inflateArgs || (() => ({})),
+
+            rerouteConnectionIn: entryParams.rerouteConnectionIn || undefined
         }
     })
     return registry

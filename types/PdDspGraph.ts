@@ -1,23 +1,37 @@
 declare module PdDspGraph {
     type NodeId = string
-    type NodeType = string
+    type NodeArguments = {[argumentName: string]: PdSharedTypes.NodeArgument}
+    type PortletId = string
 
-    type PortletId = number
-    interface PortletAddress {
-        readonly id: NodeId
-        readonly portlet: PortletId
+    interface ConnectionEndpoint {
+        readonly nodeId: NodeId
+        readonly portletId: PortletId
     }
 
-    type PortletAddressMap = {
-        [portletId: number]: Array<PortletAddress> | undefined
+    interface Portlet {
+        readonly type: PdSharedTypes.PortletType
+    }
+
+    type PortletMap = {
+        [portletId: string]: Portlet | undefined
+    }
+
+    type ConnectionEndpointMap = {
+        [portletId: string]: Array<ConnectionEndpoint> | undefined
     }
 
     interface Node {
         readonly id: NodeId
-        readonly type: NodeType
-        readonly sources: { [portletId: number]: PortletAddress | undefined }
-        readonly sinks: PortletAddressMap
+        readonly type: PdSharedTypes.NodeType
+        readonly args: NodeArguments
+        readonly sources: ConnectionEndpointMap
+        readonly sinks: ConnectionEndpointMap
+        readonly isEndSink?: true
+        readonly inlets: PortletMap
+        readonly outlets: PortletMap
     }
 
-    type Graph = { [localId: string]: Node }
+    type Graph = { [nodeId: string]: Node }
+
+    type Arrays = { [arrayName: string]: Float32Array }
 }
