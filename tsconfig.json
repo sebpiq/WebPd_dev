@@ -10,5 +10,5 @@
         "sourceMap": true
     },
     "typeRoots": ["./node_modules/@types"],
-    "include": ["@types/**/*.d.ts", "types/*.ts", "*.ts"]
+    "include": ["@types/**/*.d.ts", "types/*.ts", "src/*.ts"]
 }

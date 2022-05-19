@@ -2,7 +2,6 @@
     "name": "@webpd/shared",
     "version": "0.1.0",
     "description": "",
-    "type": "module",
     "scripts": {
         "test-watch": "./scripts/test-watch.sh",
         "test-bail": "./scripts/test-bail.sh",
@@ -21,8 +20,9 @@
     },
     "homepage": "https://github.com/sebpiq/WebPd_pd-shared#readme",
     "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^2.24.0",
-        "@typescript-eslint/parser": "^2.24.0",
+        "@types/jest": "^27.5.1",
+        "@typescript-eslint/eslint-plugin": "^5.25.0",
+        "@typescript-eslint/parser": "^5.25.0",
         "eslint": "^6.8.0",
         "eslint-config-prettier": "^6.10.1",
         "eslint-plugin-import": "^2.20.1",
@@ -31,8 +31,8 @@
         "eslint-plugin-standard": "^4.0.1",
         "mocha": "^7.1.1",
         "prettier": "^2.0.1",
-        "ts-node": "^8.6.2",
-        "typescript": "^3.8.3"
+        "ts-node": "^10.7.0",
+        "typescript": "^4.6.4"
     },
     "dependencies": {
         "mocha": "^7.1.1"
