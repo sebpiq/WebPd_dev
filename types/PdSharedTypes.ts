@@ -1,8 +1,5 @@
 declare module PdSharedTypes {
-
-    type NodeArgument = string | number
-
-    type ControlValue = Array<NodeArgument>
+    type ControlValue = Array<string | number>
 
     type SignalValue = number
 

@@ -1,7 +1,7 @@
 declare module PdRegistry {
 
     interface NodeTemplate {
-        inflateArgs: (pdJsonArgs: PdJson.ObjectArgs) => PdDspGraph.NodeArguments
+        inflateArgs: (objectArgs: PdJson.ObjectArgs, patch: PdJson.Patch) => PdDspGraph.NodeArguments
         buildInlets: (nodeArgs: PdDspGraph.NodeArguments) => PdDspGraph.PortletMap
         buildOutlets: (nodeArgs: PdDspGraph.NodeArguments) => PdDspGraph.PortletMap
         getIsEndSink?: () => boolean

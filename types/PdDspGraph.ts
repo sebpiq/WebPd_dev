@@ -1,6 +1,7 @@
 declare module PdDspGraph {
     type NodeId = string
-    type NodeArguments = {[argumentName: string]: PdSharedTypes.NodeArgument}
+    type NodeArgument = string | number
+    type NodeArguments = {[argumentName: string]: NodeArgument}
     type PortletId = string
 
     interface ConnectionEndpoint {

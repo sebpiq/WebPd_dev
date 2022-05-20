@@ -8,7 +8,9 @@ declare module PdJson {
     // interfering. This is the case for example of subpatches. 
     type ObjectLocalId = string
 
-    type ObjectArgs = Array<PdSharedTypes.NodeArgument>
+    type ObjectArg = string | number
+
+    type ObjectArgs = Array<ObjectArg>
 
     type PortletId = number
 
