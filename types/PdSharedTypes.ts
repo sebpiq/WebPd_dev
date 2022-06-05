@@ -4,6 +4,4 @@ declare module PdSharedTypes {
     type SignalValue = number
 
     type NodeType = string
-
-    type PortletType = 'signal' | 'control'
 }

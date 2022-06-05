@@ -38,13 +38,14 @@ type ConciseGraph = {
     [pdNodeId: string]: ConciseNode
 }
 
-type ConciseRegistry = {
+type ConciseNodeBuilders = {
     [nodeType: string]: {
-        inletTypes?: Array<PdSharedTypes.PortletType>
-        outletTypes?: Array<PdSharedTypes.PortletType>
+        inletTypes?: Array<PdDspGraph.PortletType>
+        outletTypes?: Array<PdDspGraph.PortletType>
         isEndSink?: boolean
-        inflateArgs?: PdRegistry.NodeTemplate["inflateArgs"]
-        rerouteConnectionIn?: PdRegistry.NodeTemplate["rerouteConnectionIn"]
+        translateArgs?: PdDspGraph.NodeBuilder["translateArgs"]
+        rerouteConnectionIn?: PdDspGraph.NodeBuilder["rerouteConnectionIn"]
+        build?: PdDspGraph.NodeBuilder["build"]
     }
 }
 
@@ -149,36 +150,43 @@ export const makeGraph = (conciseGraph: ConciseGraph): PdDspGraph.Graph => {
     return graph
 }
 
-export const makeRegistry = (
-    conciseRegistry: ConciseRegistry
-): PdRegistry.Registry => {
-    const registry: PdRegistry.Registry = {}
-    Object.entries(conciseRegistry).forEach(([nodeType, entryParams]) => {
-        const defaultPortletsTemplate: Array<PdSharedTypes.PortletType> = ['control']
+export const makeNodeBuilders = (
+    conciseNodeBuilders: ConciseNodeBuilders
+): PdDspGraph.NodeBuilders => {
+    const nodeBuilders: PdDspGraph.NodeBuilders = {}
+    Object.entries(conciseNodeBuilders).forEach(([nodeType, entryParams]) => {
+        let build: PdDspGraph.NodeBuilder["build"]
+        if (!entryParams.build) {
+            const defaultPortletsTemplate: Array<PdDspGraph.PortletType> = ['control']
 
-        const inletsTemplate: PdDspGraph.PortletMap = {}
-        ;(entryParams.inletTypes || defaultPortletsTemplate).map((inletType, i) => {
-            inletsTemplate[`${i}`] = {type: inletType}
-        })
+            const inletsTemplate: PdDspGraph.PortletMap = {}
+            ;(entryParams.inletTypes || defaultPortletsTemplate).map((inletType, i) => {
+                inletsTemplate[`${i}`] = {type: inletType, id: i.toString(10)}
+            })
+    
+            const outletsTemplate: PdDspGraph.PortletMap = {}
+            ;(entryParams.outletTypes || defaultPortletsTemplate).map((outletType, i) => {
+                outletsTemplate[`${i}`] = {type: outletType, id: i.toString(10)}
+            })
+    
+            build = () => {
+                let extraArgs: Partial<PdDspGraph.Node> = {}
+                if (entryParams.isEndSink) {
+                    extraArgs = {isEndSink: entryParams.isEndSink}
+                }
+                return {
+                    ...extraArgs,
+                    inlets: inletsTemplate,
+                    outlets: outletsTemplate,
+                }
+            }
+        }
 
-        const outletsTemplate: PdDspGraph.PortletMap = {}
-        ;(entryParams.outletTypes || defaultPortletsTemplate).map((outletType, i) => {
-            outletsTemplate[`${i}`] = {type: outletType}
-        })
-
-        registry[nodeType] = {
-            buildInlets: (): PdDspGraph.PortletMap =>
-                inletsTemplate,
-
-            buildOutlets: (): PdDspGraph.PortletMap =>
-                outletsTemplate,
-
-            getIsEndSink: () => entryParams.isEndSink || false,
-
-            inflateArgs: entryParams.inflateArgs || (() => ({})),
-
+        nodeBuilders[nodeType] = {
+            build: entryParams.build || build,
+            translateArgs: entryParams.translateArgs || (() => ({})),
             rerouteConnectionIn: entryParams.rerouteConnectionIn || undefined
         }
     })
-    return registry
+    return nodeBuilders
 }

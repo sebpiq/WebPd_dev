@@ -1,3 +1,14 @@
+/*
+ * Copyright (c) 2012-2020 Sébastien Piquemal <sebpiq@gmail.com>
+ *
+ * BSD Simplified License.
+ * For information on usage and redistribution, and for a DISCLAIMER OF ALL
+ * WARRANTIES, see the file, "LICENSE.txt," in this distribution.
+ *
+ * See https://github.com/sebpiq/WebPd_pd-parser for documentation
+ *
+ */
+
 declare module PdJson {
     // In Pd some objects use a global namespace shared across all patches.
     // This is the case for example of arrays.
@@ -13,6 +24,8 @@ declare module PdJson {
     type ObjectArgs = Array<ObjectArg>
 
     type PortletId = number
+
+    type PortletType = 'control' | 'signal' | 'mixed'
 
     interface ConnectionEndpoint {
         nodeId: ObjectLocalId
