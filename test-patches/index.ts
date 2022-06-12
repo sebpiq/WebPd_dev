@@ -1,6 +1,7 @@
 import path from 'path'
 import fs from 'fs'
-const TEST_PATCHES_DIR = path.resolve(__dirname)
+import { fileURLToPath } from 'url'
+const TEST_PATCHES_DIR = path.dirname(fileURLToPath(import.meta.url))
 
 export default {
     subpatches: fs
