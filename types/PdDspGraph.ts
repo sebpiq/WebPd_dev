@@ -16,10 +16,10 @@ declare module PdDspGraph {
 
     type NodeArgument = string | number
 
-    type NodeArguments = {[argumentName: string]: NodeArgument}
+    type NodeArguments = { [argumentName: string]: NodeArgument }
 
     type PortletId = string
-    
+
     type PortletType = 'signal' | 'control'
 
     interface ConnectionEndpoint {
@@ -65,14 +65,17 @@ declare module PdDspGraph {
     }
 
     interface NodeBuilder {
-        translateArgs: (objectArgs: PdJson.ObjectArgs, patch: PdJson.Patch) => NodeArguments
+        translateArgs: (
+            objectArgs: PdJson.ObjectArgs,
+            patch: PdJson.Patch
+        ) => NodeArguments
         build: (nodeArgs: NodeArguments) => PartialNode
 
         // Hook that allows to re-route a connection from the node to a different inlet.
-        // Useful for example for inlets in Pd that receive both signal and control, 
+        // Useful for example for inlets in Pd that receive both signal and control,
         // allows to split connections into pure signal and pure control connection instead.
         rerouteConnectionIn?: (
-            outlet: Portlet, 
+            outlet: Portlet,
             inletId: PortletId
         ) => PortletId | undefined
     }

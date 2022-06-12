@@ -13,10 +13,10 @@ declare module PdJson {
     // In Pd some objects use a global namespace shared across all patches.
     // This is the case for example of arrays.
     type ObjectGlobalId = string
-    
+
     // Other objects use a local namespace. In this case, it is therefore possible
-    // for 2 different objects in distinct patches to have the same name without 
-    // interfering. This is the case for example of subpatches. 
+    // for 2 different objects in distinct patches to have the same name without
+    // interfering. This is the case for example of subpatches.
     type ObjectLocalId = string
 
     type ObjectArg = string | number

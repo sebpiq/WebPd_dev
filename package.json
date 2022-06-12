@@ -4,9 +4,6 @@
     "description": "",
     "type": "module",
     "scripts": {
-        "test-watch": "./scripts/test-watch.sh",
-        "test-bail": "./scripts/test-bail.sh",
-        "test-debug": "./scripts/test-debug.sh",
         "prettier": "prettier --write --config configs/prettier.json",
         "eslint": "npx eslint -c .eslintrc.json --ext .js,.jsx,.ts,.tsx",
         "rollup": "npx rollup --config ./configs/rollup.ts --configPlugin typescript"

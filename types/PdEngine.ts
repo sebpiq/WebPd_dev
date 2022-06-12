@@ -1,5 +1,4 @@
 declare module PdEngine {
-
     // Code stored in string variable for later evaluation.
     type Code = string
 
@@ -18,5 +17,4 @@ declare module PdEngine {
         sampleRate: number
         channelCount: number
     }
-
 }

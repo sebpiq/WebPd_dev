@@ -43,9 +43,9 @@ type ConciseNodeBuilders = {
         inletTypes?: Array<PdDspGraph.PortletType>
         outletTypes?: Array<PdDspGraph.PortletType>
         isEndSink?: boolean
-        translateArgs?: PdDspGraph.NodeBuilder["translateArgs"]
-        rerouteConnectionIn?: PdDspGraph.NodeBuilder["rerouteConnectionIn"]
-        build?: PdDspGraph.NodeBuilder["build"]
+        translateArgs?: PdDspGraph.NodeBuilder['translateArgs']
+        rerouteConnectionIn?: PdDspGraph.NodeBuilder['rerouteConnectionIn']
+        build?: PdDspGraph.NodeBuilder['build']
     }
 }
 
@@ -81,7 +81,7 @@ export const nodeDefaults = (
     sources: {},
     sinks: {},
     inlets: {},
-    outlets: {}
+    outlets: {},
 })
 
 export const makeConnection = (
@@ -130,21 +130,19 @@ export const makeGraph = (conciseGraph: ConciseGraph): PdDspGraph.Graph => {
     })
 
     Object.entries(conciseGraph).forEach(([sourceId, partialNode]) => {
-        Object.entries(partialNode.sinks || {}).forEach(
-            ([outletId, sinks]) => {
-                graph[sourceId].sinks[outletId] = []
-                sinks.forEach(([sinkId, inlet]) => {
-                    graph[sinkId].sources[inlet] = graph[sinkId].sources[inlet] || []
-                    graph[sourceId].sinks[outletId].push(
-                        makeConnectionEndpoint([sinkId, inlet])
-                    )
-                    graph[sinkId].sources[inlet].push(makeConnectionEndpoint([
-                        sourceId,
-                        outletId,
-                    ]))
-                })
-            }
-        )
+        Object.entries(partialNode.sinks || {}).forEach(([outletId, sinks]) => {
+            graph[sourceId].sinks[outletId] = []
+            sinks.forEach(([sinkId, inlet]) => {
+                graph[sinkId].sources[inlet] =
+                    graph[sinkId].sources[inlet] || []
+                graph[sourceId].sinks[outletId].push(
+                    makeConnectionEndpoint([sinkId, inlet])
+                )
+                graph[sinkId].sources[inlet].push(
+                    makeConnectionEndpoint([sourceId, outletId])
+                )
+            })
+        })
     })
 
     return graph
@@ -155,24 +153,36 @@ export const makeNodeBuilders = (
 ): PdDspGraph.NodeBuilders => {
     const nodeBuilders: PdDspGraph.NodeBuilders = {}
     Object.entries(conciseNodeBuilders).forEach(([nodeType, entryParams]) => {
-        let build: PdDspGraph.NodeBuilder["build"]
+        let build: PdDspGraph.NodeBuilder['build']
         if (!entryParams.build) {
-            const defaultPortletsTemplate: Array<PdDspGraph.PortletType> = ['control']
+            const defaultPortletsTemplate: Array<PdDspGraph.PortletType> = [
+                'control',
+            ]
 
             const inletsTemplate: PdDspGraph.PortletMap = {}
-            ;(entryParams.inletTypes || defaultPortletsTemplate).map((inletType, i) => {
-                inletsTemplate[`${i}`] = {type: inletType, id: i.toString(10)}
-            })
-    
+            ;(entryParams.inletTypes || defaultPortletsTemplate).map(
+                (inletType, i) => {
+                    inletsTemplate[`${i}`] = {
+                        type: inletType,
+                        id: i.toString(10),
+                    }
+                }
+            )
+
             const outletsTemplate: PdDspGraph.PortletMap = {}
-            ;(entryParams.outletTypes || defaultPortletsTemplate).map((outletType, i) => {
-                outletsTemplate[`${i}`] = {type: outletType, id: i.toString(10)}
-            })
-    
+            ;(entryParams.outletTypes || defaultPortletsTemplate).map(
+                (outletType, i) => {
+                    outletsTemplate[`${i}`] = {
+                        type: outletType,
+                        id: i.toString(10),
+                    }
+                }
+            )
+
             build = () => {
                 let extraArgs: Partial<PdDspGraph.Node> = {}
                 if (entryParams.isEndSink) {
-                    extraArgs = {isEndSink: entryParams.isEndSink}
+                    extraArgs = { isEndSink: entryParams.isEndSink }
                 }
                 return {
                     ...extraArgs,
@@ -185,7 +195,7 @@ export const makeNodeBuilders = (
         nodeBuilders[nodeType] = {
             build: entryParams.build || build,
             translateArgs: entryParams.translateArgs || (() => ({})),
-            rerouteConnectionIn: entryParams.rerouteConnectionIn || undefined
+            rerouteConnectionIn: entryParams.rerouteConnectionIn || undefined,
         }
     })
     return nodeBuilders
