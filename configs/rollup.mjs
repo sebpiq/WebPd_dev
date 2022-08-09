@@ -41,8 +41,17 @@ const TS_CONFIG = `{
 fs.writeFileSync(GENERATED_TS_CONFIG_PATH, TS_CONFIG)
 
 export const buildRollupConfig = (options = {}) => {
-    options.importAsString = options.importAsString || []
-    // '**/*.asc'
+    let plugins = [
+        options.importAsString ? string({
+            include: options.importAsString,
+        }) : null,
+        typescript({ tsconfig: GENERATED_TS_CONFIG_PATH }),
+        nodeResolve(),
+        commonjs(),
+    ]
+
+    plugins = plugins.filter(plugin => !!plugin)
+
     return [
         // Typescript compilation
         {
@@ -51,14 +60,7 @@ export const buildRollupConfig = (options = {}) => {
                 file: PACKAGE_JSON.main,
                 sourcemap: true,
             },
-            plugins: [
-                string({
-                    include: options.importAsString,
-                }),
-                typescript({ tsconfig: GENERATED_TS_CONFIG_PATH }),
-                nodeResolve(),
-                commonjs(),
-            ],
+            plugins,
         },
     ]
 }
