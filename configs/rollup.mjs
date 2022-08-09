@@ -60,7 +60,7 @@ export const buildRollupConfig = (options = {}) => {
                 commonjs(),
             ],
         },
-    ]    
+    ]
 }
 
 export default buildRollupConfig()
