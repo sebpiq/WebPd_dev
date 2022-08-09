@@ -16,7 +16,7 @@ declare module PdDspGraph {
 
     type NodeArgument = string | number
 
-    type NodeArguments = { [argumentName: string]: NodeArgument }
+    type NodeArguments = { [argumentName: string]: NodeArgument | Array<NodeArgument> }
 
     type PortletId = string
 
