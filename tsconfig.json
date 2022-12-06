@@ -6,6 +6,8 @@
         "outDir": "./dist",
         "removeComments": true,
         "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noUncheckedIndexedAccess": true,
         "preserveConstEnums": true,
         "sourceMap": true,
         "declaration": true,

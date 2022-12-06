@@ -25,7 +25,7 @@ declare module PdJson {
 
     type PortletId = number
 
-    type PortletType = 'control' | 'signal' | 'mixed'
+    type PortletType = 'message' | 'signal' | 'mixed'
 
     interface ConnectionEndpoint {
         nodeId: ObjectLocalId

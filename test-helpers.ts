@@ -27,7 +27,7 @@ type ConcisePatch = Partial<Omit<PdJson.Patch, 'connections'>> & {
 }
 type ConcisePd = { patches: { [patchId: string]: ConcisePatch } }
 type ConciseNode = {
-    sinks?: { [outletId: number]: Array<ConciseConnectionEndpoint> }
+    sinks?: { [outletId: string]: Array<ConciseConnectionEndpoint> }
     type?: PdSharedTypes.NodeType
     args?: PdDspGraph.NodeArguments
     inlets?: PdDspGraph.PortletMap
@@ -156,7 +156,7 @@ export const makeNodeBuilders = (
         let build: PdDspGraph.NodeBuilder['build']
         if (!entryParams.build) {
             const defaultPortletsTemplate: Array<PdDspGraph.PortletType> = [
-                'control',
+                'message',
             ]
 
             const inletsTemplate: PdDspGraph.PortletMap = {}

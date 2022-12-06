@@ -22,7 +22,7 @@ declare module PdDspGraph {
 
     type PortletId = string
 
-    type PortletType = 'signal' | 'control'
+    type PortletType = 'signal' | 'message'
 
     interface ConnectionEndpoint {
         readonly nodeId: NodeId
@@ -35,7 +35,7 @@ declare module PdDspGraph {
     }
 
     type PortletMap = {
-        [portletId: string]: Portlet | undefined
+        [portletId: string]: Portlet
     }
 
     type ConnectionEndpointMap = {
