@@ -34,8 +34,7 @@ const TS_CONFIG = `{
         "index.ts",
         "global.d.ts",
         "src",
-        "@types/**/*.d.ts",
-        "node_modules/@webpd/shared/types/*.ts"
+        "@types/**/*.d.ts"
     ]
 }`
 fs.writeFileSync(GENERATED_TS_CONFIG_PATH, TS_CONFIG)
