@@ -1,22 +1,17 @@
 import typescript from '@rollup/plugin-typescript'
+import { visualizer } from "rollup-plugin-visualizer"
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { string } from 'rollup-plugin-string'
 import fs from 'fs'
 import path from 'path'
 
-const MODULE_ROOT = process.cwd()
-
-const PACKAGE_JSON = JSON.parse(
-    fs.readFileSync(path.resolve(MODULE_ROOT, 'package.json'), {
-        encoding: 'utf-8',
-    })
-)
-
 const GENERATED_TS_CONFIG_PATH = './tsconfig-generated-for-rollup.json'
 
+const DIST_DIR = 'dist'
+
 // Didn't manage to use a shared tsconfig file for rollup, which would live
-// in a separate repo (WebPd_shared), so we're generating it here using a template.
+// in a separate repo (WebPd_dev), so we're generating it here using a template.
 const TS_CONFIG = `{
     "compilerOptions": {
         "module": "ESNext",
@@ -27,7 +22,7 @@ const TS_CONFIG = `{
         "preserveConstEnums": true,
         "sourceMap": true,
         "declaration": true,
-        "declarationDir": "types"
+        "declarationDir": "${path.resolve(DIST_DIR, 'types')}"
     },
     "typeRoots": ["./node_modules/@types"],
     "include": [
@@ -47,6 +42,10 @@ export const buildRollupConfig = (options = {}) => {
         typescript({ tsconfig: GENERATED_TS_CONFIG_PATH }),
         nodeResolve(),
         commonjs(),
+        visualizer({
+            template: 'network',
+            filename: 'rollup-stats.html'
+        }),
     ]
 
     plugins = plugins.filter(plugin => !!plugin)
@@ -56,8 +55,10 @@ export const buildRollupConfig = (options = {}) => {
         {
             input: 'index.ts',
             output: {
-                file: PACKAGE_JSON.main,
+                preserveModules: true,
+                dir: DIST_DIR,
                 sourcemap: true,
+                format: 'esm',
             },
             plugins,
         },
