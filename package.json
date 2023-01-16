@@ -6,7 +6,8 @@
     "scripts": {
         "prettier": "prettier --write --config configs/prettier.json",
         "eslint": "npx eslint -c .eslintrc.json --ext .js,.jsx,.ts,.tsx",
-        "rollup": "npx rollup --config ./configs/rollup.mjs"
+        "rollup": "npx rollup --config ./configs/rollup.mjs",
+        "build-watch": "./scripts/build-watch.sh"
     },
     "repository": {
         "type": "git",

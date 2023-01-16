@@ -5,10 +5,12 @@ export default {
     testEnvironment: 'node',
     rootDir: process.cwd(),
     moduleNameMapper: {
-        '^([./a-zA-Z0-9$_-]+)\\.asc$': '$1.jest-mock.ts',
+        '^([./a-zA-Z0-9$_-]+)\\.asc$': './__mock__/$1.jest-mock.ts',
+        '^([./a-zA-Z0-9$_-]+)\\.generated.js.txt$': './__mock__/$1.jest-mock.ts',
     },
     extensionsToTreatAsEsm: ['.ts'],
     verbose: true,
+    watchPathIgnorePatterns: ['tmp/'],
     globals: {
         'ts-jest': {
             useESM: true,

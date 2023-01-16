@@ -14,8 +14,8 @@ const DIST_DIR = 'dist'
 // in a separate repo (WebPd_dev), so we're generating it here using a template.
 const TS_CONFIG = `{
     "compilerOptions": {
-        "module": "ESNext",
-        "target": "es2021",
+        "module": "ES2022",
+        "target": "ES2021",
         "esModuleInterop": true,
         "removeComments": true,
         "noImplicitAny": true,
@@ -27,7 +27,7 @@ const TS_CONFIG = `{
     "typeRoots": ["./node_modules/@types"],
     "include": [
         "index.ts",
-        "global.d.ts",
+        "*.d.ts",
         "src",
         "@types/**/*.d.ts"
     ]
@@ -44,7 +44,7 @@ export const buildRollupConfig = (options = {}) => {
         commonjs(),
         visualizer({
             template: 'network',
-            filename: 'rollup-stats.html'
+            filename: './tmp/rollup-stats.html'
         }),
     ]
 
