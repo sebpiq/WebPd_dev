@@ -12,7 +12,9 @@
         "preserveConstEnums": true,
         "sourceMap": true,
         "declaration": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "allowJs": true,
+        "checkJs": true
     },
     "typeRoots": ["./node_modules/@types"],
     "include": ["@types/**/*.d.ts", "types/*.ts", "src/*.ts"]

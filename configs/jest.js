@@ -9,12 +9,12 @@ export default {
         '^([./a-zA-Z0-9$_-]+)\\.generated.js.txt$': './__mock__/$1.jest-mock.ts',
     },
     extensionsToTreatAsEsm: ['.ts'],
-    verbose: true,
-    watchPathIgnorePatterns: ['tmp/'],
-    globals: {
-        'ts-jest': {
+    transform: {
+        '.*\.ts': ['ts-jest', {
             useESM: true,
             diagnostics: true,
-        },
+        }]
     },
+    verbose: true,
+    watchPathIgnorePatterns: ['tmp/'],
 }

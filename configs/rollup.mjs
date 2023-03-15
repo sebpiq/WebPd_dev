@@ -17,7 +17,7 @@ const TS_CONFIG = `{
         "module": "ES2022",
         "target": "ES2021",
         "esModuleInterop": true,
-        "removeComments": true,
+        "removeComments": false,
         "noImplicitAny": true,
         "preserveConstEnums": true,
         "sourceMap": true,

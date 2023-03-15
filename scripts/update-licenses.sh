@@ -1,0 +1,6 @@
+python3 -m licenseheaders -t node_modules/@webpd/dev/assets/lgpl-v3.tmpl \
+    -y 2022-2023 \
+    -o "Sébastien Piquemal <sebpiq@protonmail.com>, Chris McCormick" \
+    -n WebPd \
+    -u https://github.com/sebpiq/WebPd \
+    -d src/
