@@ -1,7 +1,7 @@
 {
     "name": "@webpd/dev",
     "version": "0.1.0",
-    "description": "",
+    "description": "Helpers / scripts / configs for the development of WebPd and the whole toolkit.",
     "type": "module",
     "scripts": {
         "prettier": "prettier --write --config configs/prettier.json",
@@ -9,16 +9,17 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/sebpiq/WebPd_pd-shared.git"
+        "url": "git+https://github.com/sebpiq/WebPd_dev.git"
     },
     "author": "Sébastien Piquemal",
     "license": "BSD-2-Clause",
     "bugs": {
-        "url": "https://github.com/sebpiq/WebPd_pd-shared/issues"
+        "url": "https://github.com/sebpiq/WebPd_dev/issues"
     },
-    "homepage": "https://github.com/sebpiq/WebPd_pd-shared#readme",
+    "homepage": "https://github.com/sebpiq/WebPd_dev#readme",
     "devDependencies": {
         "@rollup/plugin-commonjs": "^23.0.4",
+        "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^15.0.1",
         "@rollup/plugin-typescript": "^10.0.1",
         "@types/jest": "^27.5.1",

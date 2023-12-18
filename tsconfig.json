@@ -17,5 +17,5 @@
         "checkJs": true
     },
     "typeRoots": ["./node_modules/@types"],
-    "include": ["@types/**/*.d.ts", "types/*.ts", "src/*.ts"]
+    "include": ["@types/**/*.d.ts", "global.d.ts", "types/*.ts", "src/*.ts"]
 }

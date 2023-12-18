@@ -1,5 +1,6 @@
 import typescript from '@rollup/plugin-typescript'
-import { visualizer } from "rollup-plugin-visualizer"
+import json from '@rollup/plugin-json'
+import { visualizer } from 'rollup-plugin-visualizer'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import { string } from 'rollup-plugin-string'
@@ -12,7 +13,7 @@ const DIST_DIR = 'dist'
 
 // Didn't manage to use a shared tsconfig file for rollup, which would live
 // in a separate repo (WebPd_dev), so we're generating it here using a template.
-const TS_CONFIG = `{
+const makeTsConfig = (options) => `{
     "compilerOptions": {
         "module": "ES2022",
         "target": "ES2021",
@@ -20,9 +21,10 @@ const TS_CONFIG = `{
         "removeComments": false,
         "noImplicitAny": true,
         "preserveConstEnums": true,
-        "sourceMap": true,
+        "sourceMap": ${JSON.stringify(options.sourcemap)},
         "declaration": true,
-        "declarationDir": "${path.resolve(DIST_DIR, 'types')}"
+        "declarationDir": "${path.resolve(DIST_DIR, 'types')}",
+        "resolveJsonModule": true
     },
     "typeRoots": ["./node_modules/@types"],
     "include": [
@@ -30,39 +32,47 @@ const TS_CONFIG = `{
         "*.d.ts",
         "src",
         "@types/**/*.d.ts"
-    ]
+    ],
 }`
-fs.writeFileSync(GENERATED_TS_CONFIG_PATH, TS_CONFIG)
 
 export const buildRollupConfig = (options = {}) => {
+    options.preserveModules = options.preserveModules !== undefined
+        ? options.preserveModules
+        : true
+    
+    options.sourcemap = options.sourcemap !== undefined
+        ? options.sourcemap
+        : true
+
+    fs.writeFileSync(GENERATED_TS_CONFIG_PATH, makeTsConfig(options))
+
     let plugins = [
-        options.importAsString ? string({
-            include: options.importAsString,
-        }) : null,
+        options.importAsString
+            ? string({
+                  include: options.importAsString,
+              })
+            : null,
         typescript({ tsconfig: GENERATED_TS_CONFIG_PATH }),
         nodeResolve(),
         commonjs(),
+        json(),
         visualizer({
             template: 'network',
-            filename: './tmp/rollup-stats.html'
+            filename: './tmp/rollup-stats.html',
         }),
     ]
+    plugins = plugins.filter((plugin) => !!plugin)
 
-    plugins = plugins.filter(plugin => !!plugin)
-
-    return [
-        // Typescript compilation
-        {
-            input: 'index.ts',
-            output: {
-                preserveModules: true,
-                dir: DIST_DIR,
-                sourcemap: true,
-                format: 'esm',
-            },
-            plugins,
+    return {
+        input: 'index.ts',
+        output: {
+            format: 'esm',
+            dir: DIST_DIR,
+            preserveModules: options.preserveModules,
+            sourcemap: options.sourcemap,
         },
-    ]
+        plugins,
+    }
 }
 
 export default buildRollupConfig()
