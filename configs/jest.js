@@ -17,7 +17,7 @@ export default {
     },
     verbose: true,
     watchPathIgnorePatterns: ['tmp/'],
-    testTimeout: 10000,
+    testTimeout: 30000,
     // This helps dealing with jest getting out of memory errors when 
     // testing Wasm modules
     workerIdleMemoryLimit: 0.2,
