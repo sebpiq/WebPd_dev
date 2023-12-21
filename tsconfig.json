@@ -14,8 +14,11 @@
         "declaration": true,
         "moduleResolution": "node",
         "allowJs": true,
-        "checkJs": true
+        "checkJs": true,
+        "resolveJsonModule": true
     },
-    "typeRoots": ["./node_modules/@types"],
-    "include": ["@types/**/*.d.ts", "global.d.ts", "types/*.ts", "src/*.ts"]
+    "include": [
+        "*.d.ts",
+        "./src/**/*.ts"
+    ]
 }
