@@ -1,3 +1,6 @@
-See documentation of global libraries, for global types defined in `src/types`
+Structure of WebPd* packages
+------------------------------
 
-https://www.typescriptlang.org/docs/handbook/declaration-files/templates/global-d-ts.html
+**src/assets/**
+
+Contains assets that the code can preload directly using rollup plugins. This is useful for example to embed and distribute code of a JS worker, some text, or JSON files.

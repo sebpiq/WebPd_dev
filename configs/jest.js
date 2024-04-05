@@ -5,7 +5,7 @@ export default {
     testEnvironment: 'node',
     rootDir: process.cwd(),
     moduleNameMapper: {
-        '^([./a-zA-Z0-9$_-]+)\\.js.txt$': './__mock__/$1.js.ts',
+        '^((?:[.a-zA-Z0-9$_-]+/)*)([.a-zA-Z0-9$_-]+)\\.js.txt$': '$1__mock__/$2.js.ts',
     },
     extensionsToTreatAsEsm: ['.ts'],
     transform: {
