@@ -1,6 +1,6 @@
 {
     "name": "@webpd/dev",
-    "version": "1",
+    "version": "2",
     "description": "Helpers / scripts / configs for the development of WebPd and the whole toolkit.",
     "type": "module",
     "scripts": {},

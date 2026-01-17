@@ -12,10 +12,6 @@ const TMP_DIR = 'tmp'
 const INPUT_PATH = path.resolve('src', 'index.ts')
 
 export const buildRollupConfig = (options = {}) => {
-    options.preserveModules = options.preserveModules !== undefined
-        ? options.preserveModules
-        : true
-    
     options.sourcemap = options.sourcemap !== undefined
         ? options.sourcemap
         : false
@@ -42,7 +38,15 @@ export const buildRollupConfig = (options = {}) => {
         output: {
             format: 'esm',
             dir: DIST_DIR,
-            preserveModules: options.preserveModules,
+            // Combination of these settings makes it so that dist/
+            // modules structure is deterministic. Otherwise it might
+            // vary if for example building with locally linked modules VS
+            // building from npm repo installed modules.
+            // This is important because field "main" in package.json points
+            // to a fixed path (e.g. dist/index.js), and therefore packaging will
+            // break if the build process puts `index.js` file in different places.
+            preserveModules: true,
+            preserveModulesRoot: 'src',
             sourcemap: options.sourcemap,
         },
         plugins,
